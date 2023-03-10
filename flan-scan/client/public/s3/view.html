@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>View Report | Flan Scan</title>
+    <script type="module">
+      import jwtDecode from "https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/+esm";
+      function verifyTokenValidity() {
+        let token = sessionStorage.getItem("token");
+
+        if (!token) return false;
+        try {
+          var exp = jwtDecode(token);
+          return exp && exp.exp >= (new Date().getTime() + 10000) / 1000;
+        } catch (err) {
+          console.log({ err });
+          return false;
+        }
+      }
+      async function fetchPage(url) {
+        let token = await getAccessToken();
+        await fetch(url, { method: "GET", headers: { Authorization: `Bearer ${token}` } })
+          .then((response) => response.text())
+          .then((content) => {
+            document.body.innerHTML = content;
+
+            const home = document.createElement("a");
+            home.href = "/index.html";
+            home.textContent = "Home";
+            document.body.prepend(home);
+          });
+      }
+      async function refreshToken() {
+        let token = sessionStorage.getItem("token");
+        let refreshToken = localStorage.getItem("refreshToken");
+
+        if (!refreshToken) {
+          window.location = `/login?error=noaccess&next=${location.pathname}`;
+        }
+
+        const headers = {};
+        if (token) headers["Authorization"] = "Bearer " + token;
+        headers["Refresh-Token"] = refreshToken;
+        headers["Accept"] = "application/json, text/javascript, */*; q=0.01";
+        headers["Content-Type"] = "application/json; charset=UTF-8";
+
+        let promise = fetch("https://fw-openidconnectconsumerserver-dynamic-fmop7ymbka-uc.a.run.app/sandbox/token/refresh", { method: "GET", headers: headers })
+          .then((response) => {
+            if (response.status === 403) {
+              window.location = `/login?error=noaccess&next=${location.pathname}`;
+            } else {
+              return response.json();
+            }
+          })
+          .then((data) => {
+            if (data) {
+              let token = data["token"];
+              let refreshToken = data["refreshToken"];
+              if (token) sessionStorage.setItem("token", token);
+              if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            throw err;
+          });
+
+        return promise;
+      }
+      async function getAccessToken() {
+        if (!verifyTokenValidity()) await refreshToken();
+        return sessionStorage.getItem("token");
+      }
+
+      async function loadPage() {
+        const token = await getAccessToken();
+
+        const asset = location.pathname.replace("/view", "");
+        // send to homepage if no asset is being viewed
+        if (!asset.length || asset === "/") window.location = "/index.html";
+
+        // if asset is correct
+        await fetchPage(asset);
+      }
+      loadPage();
+    </script>
+  </head>
+  <body>
+    Loading...
+  </body>
+</html>
