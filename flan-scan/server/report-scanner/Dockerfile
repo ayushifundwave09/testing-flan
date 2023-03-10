@@ -43,7 +43,7 @@ COPY flan-scan/server/report-scanner/.aws/* /root/.aws/
 
 COPY flan-scan/server/report-scanner/* /app/
 RUN aws configure list 
-COPY build_report.sh /usr/bin
+COPY flan-scan/server/report-scanner/build_report.sh /usr/bin/
 
 RUN chmod +x /usr/bin/build_report.sh
 
