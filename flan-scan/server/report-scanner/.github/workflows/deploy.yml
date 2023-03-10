@@ -1,14 +1,9 @@
 name: Build and push image to ECR
 
 on:
-        push:
-                branch: nmap
+  push:
+    branches: [ "nmap"]
                 
-        pull_request:
-
-                branch: nmap
-  
-
 jobs:
   
   build:
