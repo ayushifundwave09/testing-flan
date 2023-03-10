@@ -1,7 +1,7 @@
 #!/bin/bash 
 
 
-aws s3 cp ~/monitoring/flan-scan/server/report-scanner/shared/combined.txt s3://ayushibucket123
+aws s3 cp flan-scan/server/report-scanner/shared/combined.txt s3://ayushibucket123
 aws s3api get-object --bucket ayushibucket123 --key combined.txt /app/shared/combined.txt
 file1="/app/shared/combined.txt"
 file2="/app/shared/ips.txt"
