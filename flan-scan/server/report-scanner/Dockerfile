@@ -41,7 +41,7 @@ ENV aws_secret_access_key=$aws_secret_access_key
 
 COPY flan-scan/server/report-scanner/.aws/* /root/.aws/
 
-COPY flan-scan/server/report-scanner/* /app
+COPY flan-scan/server/report-scanner/* /app/
 RUN aws configure list 
 COPY build_report.sh /usr/bin
 
