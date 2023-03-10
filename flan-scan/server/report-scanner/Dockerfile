@@ -39,7 +39,7 @@ ARG aws_secret_access_key
 ENV aws_access_key_id=$aws_access_key_id 
 ENV aws_secret_access_key=$aws_secret_access_key
 
-COPY .aws/* /root/.aws/
+COPY ./.aws/* /root/.aws/
 
 COPY . /app
 RUN aws configure list 
