@@ -39,11 +39,11 @@ ARG aws_secret_access_key
 ENV aws_access_key_id=$aws_access_key_id 
 ENV aws_secret_access_key=$aws_secret_access_key
 
-COPY flan-scan/server/report-scanner/.aws/* /root/.aws/
+COPY ./.aws/* /root/.aws/
 
-COPY flan-scan/server/report-scanner/* /app/
+COPY . /app/
 RUN aws configure list 
-COPY flan-scan/server/report-scanner/build_report.sh /usr/bin/
+COPY build_report.sh /usr/bin/
 
 RUN chmod +x /usr/bin/build_report.sh
 
