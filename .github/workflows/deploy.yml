@@ -51,12 +51,7 @@ jobs:
       if: steps.check_cluster.outputs.cluster_exists != 'true'
       run: |
           aws ecs create-cluster --cluster-name my-cluster-name --region ${{ secrets.AWS_REGION }}
-          echo "::set-output name=cluster_created::true"
-    - name: Cluster created
-      if: steps.check_cluster.outputs.cluster_exists != 'true'
-      run: |
-          echo "ECS cluster created successfully!"
-      if: steps.check_cluster.outputs.cluster_exists == 'true'
-      run: |
-          echo "ECS cluster already exists."
-
+     
+      else:
+      run: | 
+              echo "ECS cluster already exist"
