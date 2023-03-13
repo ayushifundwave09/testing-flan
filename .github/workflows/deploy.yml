@@ -34,31 +34,5 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v1
 
     - name: Build, tag, and push image to Amazon ECR
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: testing-flan
-        IMAGE_TAG: latest
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f flan-scan/server/report-scanner/Dockerfile .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-    - name: list the clusters 
-      id: list_cluster 
-      run: |
-             aws ecs list-clusters --region us-east-1
-
-    - name: Check if cluster already exists
-      id: check_cluster
-      run: |
-          aws ecs describe-clusters --cluster my-cluster-name --region us-east-1 || exit 0
-          echo "::set-output name=cluster_exists::true"
-    - name: Create cluster
-      if: steps.check_cluster.outputs.cluster_exists != 'true'
-      run: |
-          aws ecs create-cluster --cluster-name my-cluster-name --region us-east-1
-          echo "::set-output name=cluster_created::true"
-
-    - name: cluster already exist
-      if: steps.check_cluster.outputs.cluster_exists == 'true'
-      run: |
-          echo "ECS cluster already exists."
+              sh flan-scan/server/report-scanner/ecr_image.sh
