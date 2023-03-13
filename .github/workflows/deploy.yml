@@ -45,12 +45,12 @@ jobs:
     - name: Check if cluster already exists
       id: check_cluster
       run: |
-          aws ecs describe-clusters --cluster my-cluster-name --region ${{ secrets.AWS_REGION }} || exit 0
+          aws ecs describe-clusters --cluster my-cluster-name --region us-east-1 || exit 0
           echo "::set-output name=cluster_exists::true"
     - name: Create cluster
       if: steps.check_cluster.outputs.cluster_exists != 'true'
       run: |
-          aws ecs create-cluster --cluster-name my-cluster-name --region ${{ secrets.AWS_REGION }}
+          aws ecs create-cluster --cluster-name my-cluster-name --region us-east-1
           echo "::set-output name=cluster_created::true"
 
     - name: cluster already exist
