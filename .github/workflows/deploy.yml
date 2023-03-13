@@ -42,6 +42,11 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f flan-scan/server/report-scanner/Dockerfile .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
+    - name: list the clusters 
+      id: list_cluster 
+      run: |
+             aws ecs list-clusters --region us-east-1
+
     - name: Check if cluster already exists
       id: check_cluster
       run: |
