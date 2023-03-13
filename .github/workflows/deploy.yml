@@ -47,7 +47,7 @@ jobs:
         run: |
           aws ecs describe-clusters --cluster my-cluster-name --region ${{ secrets.AWS_REGION }} || exit 0
           echo "::set-output name=cluster_exists::true"
-      - name: Create cluster
+      - name: Create cluster if it is not exist
         if: steps.check_cluster.outputs.cluster_exists != 'true'
         run: |
           aws ecs create-cluster --cluster-name my-cluster-name --region ${{ secrets.AWS_REGION }}
