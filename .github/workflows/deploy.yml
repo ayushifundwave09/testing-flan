@@ -36,3 +36,7 @@ jobs:
     - name: Build, tag, and push image to Amazon ECR
       run: |
               sh flan-scan/server/report-scanner/ecr_image.sh
+
+    - name: create the ECS task and container
+      run: | 
+              sh flan-scan/server/report-scanner/ecs_con.sh
