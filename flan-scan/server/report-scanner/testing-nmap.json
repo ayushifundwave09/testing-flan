@@ -1,0 +1,63 @@
+{
+    "containerDefinitions": [
+        {
+            "name": "testing-nmap",
+            "image": "424190030866.dkr.ecr.us-east-1.amazonaws.com/testing-flan:latest",
+            "cpu": 253,
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "hostPort": 80,
+                        "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "environment": [],
+            "mountPoints": [
+                {
+                    "sourceVolume": "docker-socket",
+                    "containerPath": "/var/run/docker.sock",
+                    "readOnly": false
+                },
+                {
+                    "sourceVolume": "shared",
+                    "containerPath": "/app/shared",
+                    "readOnly": false
+                }
+            ],
+            "volumesFrom": [],
+            "workingDirectory": "/app",
+            "privileged": true,
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/testing-nmap",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
+        }
+    ],
+    "taskRoleArn": "arn:aws:iam::424190030866:role/ecsTaskExecutionRole",
+    "executionRoleArn": "arn:aws:iam::424190030866:role/ecsTaskExecutionRole",
+    "volumes": [
+        {
+            "name": "shared",
+            "host": {
+                "sourcePath": "shared"
+            }
+        },
+        {
+            "name": "docker-socket",
+            "host": {
+                "sourcePath": "/var/run/docker.sock"
+            }
+        }
+    ],
+    "requiresCompatibilities": [
+        "EC2"
+    ],
+    "cpu": "1024",
+    "memory": "512",
+    "family": "testing-nmap"
+}
